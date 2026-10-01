@@ -64,7 +64,7 @@ on:
         description: 'Use Old DDR Timing Parameters'
         required: true
         type: boolean
-        default: 'false'
+        default: false
       baudrate:
         description: 'Baud Rate'
         required: true
@@ -78,7 +78,7 @@ jobs:
     name: Build MT7621 u-boot
     runs-on: ubuntu-latest
     strategy:
-       fail-fast: False
+      fail-fast: false
 
     steps:
       - name: Checkout master directory
@@ -86,13 +86,13 @@ jobs:
         with:
           path: uboot-mt7621
 
-    - name: Install essential packages
-      run: |
-        sudo apt-get update
-        sudo apt-get install swig python3-dev
-        echo 'switch to python3 as default'
-        sudo rm /usr/bin/python
-        sudo ln -s /usr/bin/python3 /usr/bin/python
+      - name: Install essential packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install swig python3-dev
+          echo 'switch to python3 as default'
+          sudo rm /usr/bin/python
+          sudo ln -s /usr/bin/python3 /usr/bin/python
 
       - name: Download OpenWrt toolchain
         run: |
@@ -100,7 +100,7 @@ jobs:
             | tar --xz -xf -
 
       - name: Set old DDR timing parameters
-        if:  ${{ inputs.oldparam }}
+        if: ${{ inputs.oldparam }}
         working-directory: uboot-mt7621
         run: sed -i 's/0x0C000000/0x0A000000/g' ./arch/mips/mach-mt7621/dramc-legacy/dramc.S
 
@@ -115,4 +115,3 @@ jobs:
         with:
           name: u-boot
           path: "uboot-mt7621/archive/"
-
